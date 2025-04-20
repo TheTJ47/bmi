@@ -498,26 +498,26 @@
                         }
                     });
                     {% endif %}
+                    
+                    // Function to save BMI result as image
+                    function saveResultAsImage() {
+                        const resultSection = document.querySelector('.result-container');
+                        if (!resultSection) return;
+                        
+                        html2canvas(resultSection).then(canvas => {
+                            // Create a temporary link element
+                            const link = document.createElement('a');
+                            link.download = 'BMI-Result.png';
+                            link.href = canvas.toDataURL('image/png');
+                            
+                            // Trigger download
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        });
+                    }
                 </script>
 
-                <!-- Remove this entire style block -->
-                <!--
-                <style>
-                    /* Additional style for the indicator dot */
-                    .bmi-indicator {
-                        position: absolute;
-                        width: 16px;
-                        height: 16px;
-                        background-color: black;
-                        border: 2px solid white;
-                        border-radius: 50%;
-                        bottom: -8px;
-                        transform: translateX(-50%);
-                        z-index: 10;
-                    }
-                </style>
-                -->
-                
                 <!-- Add html2canvas library for screenshot functionality -->
                 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
                 {% endif %}
