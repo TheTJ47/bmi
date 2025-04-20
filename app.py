@@ -114,5 +114,9 @@ def index():
                          ponderal_index=ponderal_index,
                          app_name=app_name)  # Pass the app name to the template
 
+@app.route('/about')
+def about():
+    return render_template('about.html', app_name=app_name)
+
 if __name__ == "__main__":
     app.run(debug=True)

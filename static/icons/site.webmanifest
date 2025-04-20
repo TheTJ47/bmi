@@ -1,0 +1,14 @@
+{
+    "name": "BMIVitals",
+    "short_name": "BMIVitals",
+    "icons": [
+        {
+            "src": "/static/icons/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#558b2f",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
