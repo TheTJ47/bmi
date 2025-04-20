@@ -1,0 +1,24 @@
+BMI Calculator Test Results
+==================================================
+Test Run Date: 2025-04-20 14:40:14.276271
+
+Test Case: 1
+Input: Height=170cmcm, Weight=70kg
+Expected: Normal weight
+Result: PASS
+--------------------------------------------------
+Test Case: 2
+Input: Height=160cmcm, Weight=85kg
+Expected: Obese Class I
+Result: PASS
+--------------------------------------------------
+Test Case: 3
+Input: Height=5ft 9inft_in, Weight=150lbs
+Expected: Normal weight
+Result: PASS
+--------------------------------------------------
+Test Case: 4
+Input: Height=5ft 6inft_in, Weight=200lbs
+Expected: Obese Class I
+Result: PASS
+--------------------------------------------------

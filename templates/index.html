@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -440,42 +441,63 @@
                 </style>
 
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Remove this code that positions the indicator dot
-                        /*
-                        const bmi = parseFloat("{{ bmi }}");
-                        const indicator = document.getElementById('bmi-indicator');
-                        
-                        if (indicator) {
-                            // Calculate position percentage based on BMI
-                            let position = 0;
-                            if (bmi <= 16) {
-                                position = 0;
-                            } else if (bmi >= 40) {
-                                position = 100;
-                            } else {
-                                position = ((bmi - 16) / (40 - 16)) * 100;
-                            }
-                            
-                            // Set indicator position
-                            indicator.style.left = position + '%';
+                    // Handle height unit selection
+                    document.querySelector('select[name="height_unit"]').addEventListener('change', function() {
+                        const cmHeight = document.getElementById('cm_height');
+                        const ftInHeight = document.getElementById('ft_in_height');
+                        if (this.value === 'cm') {
+                            cmHeight.style.display = 'block';
+                            ftInHeight.style.display = 'none';
+                        } else {
+                            cmHeight.style.display = 'none';
+                            ftInHeight.style.display = 'block';
                         }
-                        */
                     });
                     
-                    // Function to save the BMI result as an image
-                    function saveResultAsImage() {
-                        const element = document.getElementById('bmi-result-section');
+                    // Set the gauge needle position based on BMI value
+                    {% if bmi %}
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Scroll to result section
+                        const resultSection = document.getElementById('bmi-result-section');
+                        if (resultSection) {
+                            resultSection.scrollIntoView({ behavior: 'smooth' });
+                        }
                         
-                        // Use html2canvas library to capture the element
-                        html2canvas(element).then(function(canvas) {
-                            // Create a temporary link
-                            const link = document.createElement('a');
-                            link.download = 'bmi-result.png';
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                        });
-                    }
+                        const bmi = parseFloat("{{ bmi }}");
+                        let angle = 0;
+                        
+                        // Calculate angle based on BMI value
+                        if (bmi < 16.5) {
+                            angle = -90; // Minimum (180 - 270 = -90)
+                        } else if (bmi >= 40) {
+                            angle = 90; // Maximum (180 + 90 = 270)
+                        } else {
+                            // Map BMI ranges to angles
+                            if (bmi < 18.5) {
+                                // Underweight: -90 to -54 degrees
+                                angle = -90 + (bmi - 16.5) * (36 / 2);
+                            } else if (bmi < 25) {
+                                // Normal: -54 to 0 degrees
+                                angle = -54 + (bmi - 18.5) * (54 / 6.5);
+                            } else if (bmi < 30) {
+                                // Overweight: 0 to 36 degrees
+                                angle = 0 + (bmi - 25) * (36 / 5);
+                            } else if (bmi < 35) {
+                                // Obese I: 36 to 72 degrees
+                                angle = 36 + (bmi - 30) * (36 / 5);
+                            } else {
+                                // Obese II/III: 72 to 90 degrees
+                                angle = 72 + (bmi - 35) * (18 / 5);
+                            }
+                        }
+                        
+                        // Set the needle rotation
+                        const needle = document.getElementById('bmi-needle');
+                        if (needle) {
+                            needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+                        }
+                    });
+                    {% endif %}
                 </script>
 
                 <!-- Remove this entire style block -->
@@ -581,61 +603,5 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Handle height unit selection
-        document.querySelector('select[name="height_unit"]').addEventListener('change', function() {
-            const cmHeight = document.getElementById('cm_height');
-            const ftInHeight = document.getElementById('ft_in_height');
-            if (this.value === 'cm') {
-                cmHeight.style.display = 'block';
-                ftInHeight.style.display = 'none';
-            } else {
-                cmHeight.style.display = 'none';
-                ftInHeight.style.display = 'block';
-            }
-        });
-        
-        // Set the gauge needle position based on BMI value
-        {% if bmi %}
-            document.addEventListener('DOMContentLoaded', function() {
-                const bmi = parseFloat("{{ bmi }}");
-                let angle = 0;
-                
-                // Calculate angle based on BMI value
-                if (bmi < 16.5) {
-                    angle = -90; // Minimum (180 - 270 = -90)
-                } else if (bmi >= 40) {
-                    angle = 90; // Maximum (180 + 90 = 270)
-                } else {
-                    // Map BMI ranges to angles
-                    if (bmi < 18.5) {
-                        // Underweight: -90 to -54 degrees
-                        angle = -90 + (bmi - 16.5) * (36 / 2);
-                    } else if (bmi < 25) {
-                        // Normal: -54 to 0 degrees
-                        angle = -54 + (bmi - 18.5) * (54 / 6.5);
-                    } else if (bmi < 30) {
-                        // Overweight: 0 to 36 degrees
-                        angle = 0 + (bmi - 25) * (36 / 5);
-                    } else if (bmi < 35) {
-                        // Obese I: 36 to 72 degrees
-                        angle = 36 + (bmi - 30) * (36 / 5);
-                    } else {
-                        // Obese II/III: 72 to 90 degrees
-                        angle = 72 + (bmi - 35) * (18 / 5);
-                    }
-                }
-                
-                // Set the needle rotation
-                const needle = document.getElementById('bmi-needle');
-                if (needle) {
-                    needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-                    console.log("BMI:", bmi, "Angle:", angle, "Needle set to rotate", angle, "degrees");
-                } else {
-                    console.error("Needle element not found");
-                }
-            });
-        {% endif %}
-    </script>
 </body>
 </html>
