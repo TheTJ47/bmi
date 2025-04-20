@@ -4,6 +4,9 @@ import math
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Required for flash messages
 
+# Add a variable for the app name that will be used throughout the application
+app_name = "BMIVitals"  # Using a unique name for Netlify deployment
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     bmi = None
@@ -108,7 +111,8 @@ def index():
                          health_risk=health_risk,
                          healthy_weight_range=healthy_weight_range,
                          bmi_prime=bmi_prime,
-                         ponderal_index=ponderal_index)
+                         ponderal_index=ponderal_index,
+                         app_name=app_name)  # Pass the app name to the template
 
 if __name__ == "__main__":
     app.run(debug=True)
